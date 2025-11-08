@@ -57,7 +57,7 @@ public class ExcelService {
         }
 
         if (numbers.isEmpty()) {
-            throw new IllegalStateException("No numeric data found in the first column of the Excel file");
+            throw new IOException("No numeric data found in the first column of the Excel file");
         }
 
         return numbers.toArray(new Integer[0]);

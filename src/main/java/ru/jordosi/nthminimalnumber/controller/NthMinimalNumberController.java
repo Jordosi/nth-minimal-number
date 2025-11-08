@@ -27,7 +27,7 @@ public class NthMinimalNumberController {
         this.quickSelectService = quickSelectService;
     }
 
-    @GetMapping("/find-k-min")
+    @GetMapping("/find-nth-min")
     @Operation(summary="Find N-th minimal number", description="Accepts a path to the local XLSX file" +
             "and N number, returns N-th minimal number and stats (N, total amount of numbers)")
     @ApiResponses(value = {

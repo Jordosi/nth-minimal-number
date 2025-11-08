@@ -15,6 +15,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class QuickSelectService {
     public Integer findNthMinimalNumber(Integer[] arr, int k) {
+        if (arr == (null) || arr.length == 0) {
+            throw new IllegalArgumentException("Array cannot be null or empty");
+        }
+
         if (k < 1 || k > arr.length) {
             throw new IllegalArgumentException("N must be in range from 1 to " + arr.length);
         }
