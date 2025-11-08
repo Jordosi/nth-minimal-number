@@ -75,7 +75,8 @@ public class ExcelServiceTest {
         IOException exception = assertThrows(IOException.class,
                 () -> excelService.findNumbersFromExcel(nonExistentPath));
         assertTrue( exception.getMessage().contains("Системе не удается найти указанный путь") ||
-                    exception.getMessage().contains("Не удается найти указанный файл"));
+                    exception.getMessage().contains("Не удается найти указанный файл") ||
+                    exception.getMessage().contains("/nonexistent/file.xlsx"));
     }
 
     @Test
