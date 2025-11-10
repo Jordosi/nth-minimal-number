@@ -62,4 +62,40 @@ public class NthMinimalNumberController {
             return ResponseEntity.internalServerError().body("Unexpected error: " + e.getMessage());
         }
     }
+
+    @GetMapping("/find-nth-min/unique")
+    @Operation(summary="Find N-th minimal unique number", description="Accepts a path to the local XLSX file" +
+            "and N number, returns N-th minimal unique number and stats (N, total amount of numbers)")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful search"),
+            @ApiResponse(responseCode = "400", description = "Wrong request parameters or file does not contain proper data"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    public ResponseEntity<?> getMinimalUniqueNumbers(@RequestBody FindNumberRequest request) {
+        try {
+            if (request.getN() < 1) {
+                return ResponseEntity.badRequest().body("N must be greater than or equal to 1");
+            }
+
+            Integer[] numbers = excelService.findUniqueNumbersFromExcel(request.getPath());
+
+            if (request.getN() > numbers.length) {
+                return ResponseEntity.badRequest().body("N must be less than or equal to numbers amount");
+            }
+
+            Integer result = quickSelectService.findNthMinimalUniqueNumber(numbers, request.getN());
+            Map<String, Object> response = new HashMap<>();
+            response.put("n", request.getN());
+            response.put("result", result);
+            response.put("totalNumbers", numbers.length);
+
+            return ResponseEntity.ok(response);
+        } catch (IOException e) {
+            return ResponseEntity.badRequest().body("Input error: " + e.getMessage());
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body("Argument recognition error: " + e.getMessage());
+        } catch (Exception e){
+            return ResponseEntity.internalServerError().body("Unexpected error: " + e.getMessage());
+        }
+    }
 }

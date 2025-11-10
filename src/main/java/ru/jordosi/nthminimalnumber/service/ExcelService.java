@@ -6,9 +6,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 
 /**
@@ -58,6 +56,30 @@ public class ExcelService {
 
         if (numbers.isEmpty()) {
             throw new IOException("No numeric data found in the first column of the Excel file");
+        }
+
+        return numbers.toArray(new Integer[0]);
+    }
+
+    public Integer[] findUniqueNumbersFromExcel(String path) throws IOException {
+        validateInput(path);
+        Set<Integer> numbers = new HashSet<>();
+        try (FileInputStream fis = new FileInputStream(path);
+                Workbook workbook =  new XSSFWorkbook(fis)) {
+            Sheet sheet = workbook.getSheetAt(0);
+            Iterator<Row> rowIterator = sheet.iterator();
+            while (rowIterator.hasNext()) {
+                Row row = rowIterator.next();
+                Cell cell = row.getCell(0);
+
+                if (cell != null && cell.getCellType() == CellType.NUMERIC) {
+                    numbers.add((int) cell.getNumericCellValue());
+                }
+            }
+        }
+
+        if (numbers.isEmpty()) {
+            throw new IOException("No unique numeric data found in the first column of the Excel file");
         }
 
         return numbers.toArray(new Integer[0]);

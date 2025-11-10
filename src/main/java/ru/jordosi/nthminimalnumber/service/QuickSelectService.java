@@ -2,6 +2,10 @@ package ru.jordosi.nthminimalnumber.service;
 
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Service implementing the QuickSelect algorithm for finding the N-th smallest element.
  * <p>
@@ -23,7 +27,21 @@ public class QuickSelectService {
             throw new IllegalArgumentException("N must be in range from 1 to " + arr.length);
         }
 
-        return quickSelect(arr, 0, arr.length - 1, k - 1);
+        return quickSelect(arr.clone(), 0, arr.length - 1, k - 1);
+    }
+
+    public Integer findNthMinimalUniqueNumber(Integer[] arr, int k) {
+        if (arr == (null) || arr.length == 0) {
+            throw new IllegalArgumentException("Array cannot be null or empty");
+        }
+
+        Integer[] uniqueArr = getUniqueSortedArray(arr);
+
+        if (k < 1 || k > arr.length) {
+            throw new IllegalArgumentException("N must be in range from 1 to " + arr.length);
+        }
+
+        return uniqueArr[k-1];
     }
 
     public Integer quickSelect(Integer[] arr, int left, int right, int k) {
@@ -40,6 +58,13 @@ public class QuickSelectService {
         } else {
             return quickSelect(arr, pivotIndex + 1, right, k);
         }
+    }
+
+    private Integer[] getUniqueSortedArray(Integer[] arr) {
+        Set<Integer> uniqueSet = new HashSet<>(Arrays.asList(arr));
+        Integer[] uniqueArray = uniqueSet.toArray(new Integer[0]);
+        Arrays.sort(uniqueArray);
+        return uniqueArray;
     }
 
     private int partition(Integer[] arr, int left, int right) {
